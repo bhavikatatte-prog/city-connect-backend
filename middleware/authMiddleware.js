@@ -6,12 +6,15 @@ module.exports = async (req, res, next) => {
   if (!token) {
     return res.status(401).json({ msg: 'No token, authorization denied' });
   }
+
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    const [rows] = await db.execute('SELECT id, role FROM users WHERE id = ?', [decoded.user.id]);
+    const { rows } = await db.query('SELECT id, role FROM users WHERE id = $1', [decoded.user.id]);
+    
     if (rows.length === 0) {
       return res.status(401).json({ msg: 'Token is not valid' });
     }
+    
     req.user = rows[0];
     next();
   } catch (err) {
