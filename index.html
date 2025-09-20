@@ -58,7 +58,7 @@
             // Function to fetch advertisements from your backend
             const fetchAds = async () => {
                 try {
-                    const response = await fetch('http://localhost:5000/api/ads');
+                    const response = await fetch('https://city-connect-ynelon.onrender.com/api/ads');
                     const ads = await response.json();
 
                     if (ads.length === 0) {
