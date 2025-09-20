@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>City Connect</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        .container {
+            max-width: 800px;
+            margin: auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1, h2 {
+            color: #555;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+        }
+        .ad-item {
+            border: 1px solid #ccc;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+            background-color: #fafafa;
+        }
+        .ad-item img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>City Connect</h1>
+        <p>Your one-stop platform for everything happening in the city.</p>
+
+        <h2>Recent Advertisements</h2>
+        <div id="ads-container">
+            <p>Loading advertisements...</p>
+        </div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const adsContainer = document.getElementById('ads-container');
+
+            // Function to fetch advertisements from your backend
+            const fetchAds = async () => {
+                try {
+                    const response = await fetch('http://localhost:5000/api/ads');
+                    const ads = await response.json();
+
+                    if (ads.length === 0) {
+                        adsContainer.innerHTML = '<p>No approved advertisements to display yet.</p>';
+                        return;
+                    }
+
+                    // Clear the loading message
+                    adsContainer.innerHTML = '';
+
+                    // Loop through the ads and display them
+                    ads.forEach(ad => {
+                        const adElement = document.createElement('div');
+                        adElement.classList.add('ad-item');
+                        adElement.innerHTML = `
+                            <h3>${ad.title}</h3>
+                            <p><strong>Description:</strong> ${ad.description}</p>
+                            <img src="${ad.image_url}" alt="${ad.title}">
+                            <p><strong>Location:</strong> ${ad.location}</p>
+                            <p><strong>Contact:</strong> ${ad.contact}</p>
+                            <p><strong>Posted By:</strong> ${ad.posted_by_name} (${ad.posted_by_address})</p>
+                        `;
+                        adsContainer.appendChild(adElement);
+                    });
+
+                } catch (error) {
+                    adsContainer.innerHTML = '<p>Error loading advertisements. Please ensure the backend server is running.</p>';
+                    console.error('Error fetching advertisements:', error);
+                }
+            };
+
+            fetchAds();
+        });
+    </script>
+</body>
+</html>
+
+</body>
+</html>
